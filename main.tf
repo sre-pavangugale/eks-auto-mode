@@ -72,8 +72,6 @@ module "eks_auto_custom_node_pools" {
 
 module "disabled_eks" {
   source = "../.."
-
-  create = false
 }
 
 ################################################################################
