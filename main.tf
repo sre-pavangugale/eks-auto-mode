@@ -5,15 +5,7 @@ module "eks" {
   kubernetes_version = var.kubernetes_version
   subnet_ids      = module.vpc.private_subnets
 
-  enable_irsa = true
-
-  tags = {
-    cluster = "demo"
-  }
-
-  vpc_id = module.vpc.vpc_id
-
-# Correct placement: top-level argument in the module block
+  # Correct placement: top-level argument in the module block
   eks_managed_node_group_defaults = {
     ami_type       = "AL2_x86_64"
     instance_types = ["t3.medium"]
@@ -32,5 +24,12 @@ module "eks" {
       instance_types = ["m5.large"] # Overrides the default instance type
     }
   }
+
+  tags = {
+    cluster = "demo"
+  }
+
+  vpc_id = module.vpc.vpc_id
+
 }
 
