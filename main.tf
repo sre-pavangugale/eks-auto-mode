@@ -1,8 +1,8 @@
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   version         = "v21.11.0"
-  cluster_name    = local.cluster_name
-  cluster_version = var.kubernetes_version
+  name    = local.cluster_name
+  kubernetes_version = var.kubernetes_version
   subnet_ids      = module.vpc.private_subnets
 
   enable_irsa = true
@@ -13,18 +13,23 @@ module "eks" {
 
   vpc_id = module.vpc.vpc_id
 
+# Correct placement: top-level argument in the module block
   eks_managed_node_group_defaults = {
-    ami_type               = "AL2_x86_64"
-    instance_types         = ["t3.medium"]
-    vpc_security_group_ids = [aws_security_group.all_worker_mgmt.id]
+    ami_type       = "AL2_x86_64"
+    instance_types = ["t3.medium"]
+    disk_size      = 50 # Default disk size for all managed groups
   }
 
   eks_managed_node_groups = {
+    default_ng = {
+      min_size = 1
+      max_size = 3
+      # Other specific settings for this node group
+    }
 
-    node_group = {
-      min_size     = 2
-      max_size     = 6
-      desired_size = 2
+    # Another node group, which will inherit defaults unless overridden
+    another_ng = {
+      instance_types = ["m5.large"] # Overrides the default instance type
     }
   }
 }
