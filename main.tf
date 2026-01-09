@@ -13,7 +13,7 @@ data "aws_availability_zones" "available" {
 locals {
   name               = "ex-${basename(path.cwd)}"
   kubernetes_version = "1.33"
-  region             = "us-west-2"
+  region             = "ap-south-1"
 
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
